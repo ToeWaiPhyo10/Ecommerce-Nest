@@ -5,12 +5,9 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  Request,
-  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignInDTO } from './dtos/signin-dto';
-import { AuthGuard } from './auth.guard';
 
 @Controller('auth')
 export class AuthController {

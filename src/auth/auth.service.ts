@@ -25,8 +25,11 @@ export class AuthService {
     if (!isPasswordMatch) {
       throw new UnauthorizedException('Invalid email or password');
     }
-    console.log('is', isPasswordMatch);
-    const token = await this.jwtService.signAsync({ id: user.id });
+
+    const token = await this.jwtService.signAsync({
+      id: user.id,
+      role: user.role,
+    });
     return formatResponse(200, 'Login successful', { ...user, token });
   }
 }

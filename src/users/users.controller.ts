@@ -12,21 +12,24 @@ import {
 } from '@nestjs/common';
 import { UserService } from './users.service';
 import { CreateUserDto } from './dtos/create-user-dto';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { AuthGuard } from 'src/auth/guard/auth.guard';
+import { RolesGuard } from 'src/auth/guard/roles.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { Role } from 'src/auth/enum/role.enum';
 
 @Controller('users')
 export class UserController {
   constructor(private userService: UserService) {}
 
   @Get()
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   async getUsers() {
     return this.userService.findAll();
   }
   @Get('profile')
   @UseGuards(AuthGuard)
   getProfile(@Request() req) {
-    console.log('req', req);
     return this.userService.findOne(req.user.id);
   }
 
@@ -37,7 +40,7 @@ export class UserController {
   }
 
   @Post()
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
   @UsePipes(new ValidationPipe())
   async createUser(@Body() body: CreateUserDto) {
     return this.userService.create(body);

@@ -4,6 +4,8 @@ import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dtos/create-user-dto';
 import { formatResponse } from 'src/utils/response.util';
+import { Role } from 'src/auth/enum/role.enum';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class UserService {
@@ -32,7 +34,12 @@ export class UserService {
         `User with the same ${userExist.username === user?.username ? 'username' : 'email'} already exist`,
       );
     }
-    const newUser = await this.userRepository.create(user);
+    const hashedPassword = bcrypt.hashSync(user.password, 10);
+    const newUser = await this.userRepository.create({
+      ...user,
+      password: hashedPassword,
+      role: user.role ?? Role.User,
+    });
     const savedUser = await this.userRepository.save(newUser);
     return formatResponse(200, 'User successfully created', savedUser);
   }

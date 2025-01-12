@@ -17,7 +17,6 @@ export class UserSubscriber implements EntitySubscriberInterface {
   }
 
   beforeInsert(event: InsertEvent<User>): Promise<any> | void {
-    console.log(`BEFORE USER INSERTED: `, event.entity);
     const user = event.entity;
 
     if (user.password && !bcrypt.getRounds(user.password)) {
