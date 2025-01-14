@@ -1,5 +1,6 @@
 import { Role } from 'src/auth/enum/role.enum';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Profile } from 'src/profile/profile.entity';
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class User {
@@ -24,4 +25,7 @@ export class User {
     default: Role.User,
   })
   role: Role;
+
+  @OneToOne(() => Profile, (profile) => profile.user, { cascade: true })
+  profile: Profile;
 }
