@@ -10,6 +10,7 @@ import { ProfileModule } from './profile/profile.module';
 import { Profile } from './profile/profile.entity';
 import { CategoryModule } from './category/category.module';
 import { Category } from './category/category.entity';
+import { MailerModule } from './mailer/mailer.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { Category } from './category/category.entity';
     AuthModule,
     ProfileModule,
     CategoryModule,
+    MailerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
