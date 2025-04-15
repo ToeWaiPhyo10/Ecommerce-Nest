@@ -15,17 +15,18 @@ export class AuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
     if (!token) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Access token is missing');
     }
     try {
+      // Verify the access token
       const payload = await this.jwtService.verifyAsync(token, {
         secret: process.env.JWT_SECRET,
       });
       request['user'] = payload;
-    } catch {
-      throw new UnauthorizedException();
+      return true;
+    } catch (error) {
+      throw new UnauthorizedException('Invalid or expired token');
     }
-    return true;
   }
 
   private extractTokenFromHeader(request: Request): string | undefined {

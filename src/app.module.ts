@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -11,6 +11,7 @@ import { Profile } from './profile/profile.entity';
 import { CategoryModule } from './category/category.module';
 import { Category } from './category/category.entity';
 import { MailerModule } from './mailer/mailer.module';
+import { RefreshTokenMiddleware } from './auth/middleware/refresh-token.middleware';
 
 @Module({
   imports: [
@@ -38,4 +39,10 @@ import { MailerModule } from './mailer/mailer.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(RefreshTokenMiddleware)
+      .forRoutes('*');
+  }
+}
