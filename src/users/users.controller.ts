@@ -40,7 +40,7 @@ export class UserController {
   }
 
   @Post()
-  // @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard)
   @UsePipes(new ValidationPipe())
   async createUser(@Body() body: CreateUserDto) {
     return this.userService.create(body);
