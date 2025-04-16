@@ -8,10 +8,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/users/user.entity';
 import { RefreshToken } from './refresh-token.entity';
 import { RefreshTokenService } from './refresh-token.service';
+import { PasswordReset } from './password-reset.entity';
+import { PasswordResetService } from './password-reset.service';
+import { MailerModule } from 'src/mailer/mailer.module';
 
 @Module({
   imports: [
     UserModule,
+    MailerModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: './.env',
@@ -21,10 +25,10 @@ import { RefreshTokenService } from './refresh-token.service';
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '1h' },
     }),
-    TypeOrmModule.forFeature([User, RefreshToken]),
+    TypeOrmModule.forFeature([User, RefreshToken, PasswordReset]),
   ],
   controllers: [AuthController],
-  providers: [AuthService, RefreshTokenService],
-  exports: [AuthService, RefreshTokenService, TypeOrmModule],
+  providers: [AuthService, RefreshTokenService, PasswordResetService],
+  exports: [AuthService, RefreshTokenService, PasswordResetService, TypeOrmModule],
 })
 export class AuthModule {}
