@@ -12,12 +12,19 @@ import { SignInDTO } from './dtos/signin-dto';
 import { SignUpDTO } from './dtos/signup-dto';
 import { RefreshTokenDto } from './dtos/refresh-token.dto';
 import { RefreshTokenService } from './refresh-token.service';
+import { PasswordResetService } from './password-reset.service';
+import { ForgotPasswordDto } from './dtos/forgot-password.dto';
+import { VerifyResetTokenDto } from './dtos/verify-reset-token.dto';
+import { ResetPasswordDto } from './dtos/reset-password.dto';
+import { CompleteResetPasswordDto } from './dtos/complete-reset-password.dto';
+import { ResendTokenDto } from './dtos/resend-token.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private authService: AuthService,
     private refreshTokenService: RefreshTokenService,
+    private passwordResetService: PasswordResetService,
   ) {}
 
   @HttpCode(HttpStatus.OK)
@@ -54,5 +61,52 @@ export class AuthController {
     @Body('refreshToken') refreshToken?: string,
   ) {
     return this.authService.logout(userId, refreshToken);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('forgot-password')
+  async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
+    return this.passwordResetService.generateResetToken(
+      forgotPasswordDto.email,
+    );
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('resend-otp')
+  async resendResetToken(@Body() resendTokenDto: ResendTokenDto) {
+    return this.passwordResetService.resendResetToken(resendTokenDto.email);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('verify-otp')
+  async verifyResetToken(@Body() verifyResetTokenDto: VerifyResetTokenDto) {
+    return this.passwordResetService.verifyResetToken(
+      verifyResetTokenDto.email,
+      verifyResetTokenDto.token,
+    );
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('reset-password')
+  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+    return this.passwordResetService.resetPassword(
+      resetPasswordDto.email,
+      resetPasswordDto.token,
+      resetPasswordDto.password,
+      resetPasswordDto.confirmPassword,
+    );
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('complete-reset-password')
+  async completeResetPassword(
+    @Body() completeResetPasswordDto: CompleteResetPasswordDto,
+  ) {
+    return this.passwordResetService.completePasswordReset(
+      completeResetPasswordDto.userId,
+      completeResetPasswordDto.email,
+      completeResetPasswordDto.password,
+      completeResetPasswordDto.confirmPassword,
+    );
   }
 }
