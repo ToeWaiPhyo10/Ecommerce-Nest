@@ -12,6 +12,7 @@ import { CategoryModule } from './category/category.module';
 import { Category } from './category/category.entity';
 import { MailerModule } from './mailer/mailer.module';
 import { RefreshTokenMiddleware } from './auth/middleware/refresh-token.middleware';
+import { WebsocketsModule } from './websockets/websockets.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { RefreshTokenMiddleware } from './auth/middleware/refresh-token.middlewa
     ProfileModule,
     CategoryModule,
     MailerModule,
+    WebsocketsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
